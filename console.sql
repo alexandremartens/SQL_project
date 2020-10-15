@@ -1,19 +1,22 @@
 /* Delete the tables if they already exist */
-drop table if exists customer;
-drop table if exists employee;
+drop table if exists customer cascade ;
+drop table if exists employee cascade ;
 drop table if exists "order" cascade ;
 drop table if exists recommendation;
-drop table if exists "section";
+drop table if exists section cascade ;
 drop table if exists book;
+drop table if exists interacts;
+drop table if exists complains;
 
 
 /* Create the schema for our tables */
 create table customer(
-                         firstname   char(15),
-                         surname     char(20),
-                         Gender      varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
-                         SSN         integer not null check (SSN between 100000000 and 999999999) primary key,
-                         age         integer not null check (age between 1 and 99)
+    firstname   char(15),
+    surname     char(20),
+    Gender      varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
+    SSN         integer not null check (SSN between 100000000 and 999999999) primary key,
+    age         integer not null check (age between 1 and 99),
+    unique (SSN)
 );
 
 create table employee
@@ -24,20 +27,19 @@ create table employee
     empID      integer      not null,
     SSN        integer      not null check (SSN between 100000000 and 999999999) primary key,
     age        integer      not null check (age between 1 and 99),
-    sectNumber varchar(255) not null,
-    foreign key (sectNumber) references book (sectNumber)
+    sectNumber varchar(255) not null
 );
 
 create table "order"
 (
     orderID     integer not null primary key,
     custSSN     integer not null,
-    foreign key (custSSN) references customer (SSN),
     bookID      integer not null,
-    foreign key (bookID) references book (book_id),
     ordertype   varchar(20) not null check(ordertype in ('Rental', 'Purchase')),
     price       integer not null,
-    date date
+    date date,
+    unique(custSSN),
+    unique (orderID)
 );
 
 CREATE TABLE book
@@ -49,42 +51,46 @@ CREATE TABLE book
     title      CHARACTER VARYING(255)                             NOT NULL,
     editor     CHARACTER VARYING(255)                             NOT NULL,
     CONSTRAINT "Book_pkey" PRIMARY KEY (book_id),
-    sectNumber varchar(255)                                       not null
-    --foreign key (sectNumber) references section (NAME)
+    sectNumber varchar(255)                                       not null,
+    unique (sectNumber)
 );
-
 
 CREATE TABLE section(
-                        NAME CHARACTER VARYING (255) NOT NULL,
-                        empSSN int not null,
-                        foreign key (empSSN) references employee (SSN),
-                        number INTEGER NOT NULL,
-                        number_books INTEGER NOT NULL,
-                        genre CHARACTER VARYING[] COLLATE pg_catalog."default",
-                        CONSTRAINT section_pkey PRIMARY KEY (NAME, "number")
+    NAME CHARACTER VARYING (255) NOT NULL,
+    empSSN int not null,
+    number INTEGER NOT NULL,
+    number_books INTEGER NOT NULL,
+    genre CHARACTER VARYING[] COLLATE pg_catalog."default",
+    CONSTRAINT section_pkey PRIMARY KEY (NAME, "number"),
+    unique (NAME)
 );
 
-
 CREATE TABLE recommendation (
-                                Title CHARACTER VARYING(255),
-                                Genre CHARACTER VARYING(255),
-                                Author CHARACTER VARYING(255),
-                                How_it_relates CHARACTER VARYING(255),
-                                orderID int not null,
-                                foreign key (orderID) references "order" (orderID)
+    Title CHARACTER VARYING(255),
+    Genre CHARACTER VARYING(255),
+    Author CHARACTER VARYING(255),
+    How_it_relates CHARACTER VARYING(255),
+    orderID int not null
 );
 
 create table interacts (
-                           custId int not null,
-                           empId int not null,
-                           interaction varchar(100)
+    custId int not null,
+    empId int not null,
+    interaction varchar(100)
 );
 
 create table complains (
-                           custId int not null,
-                           empId int not null,
-                           interaction varchar(100)
+    custId int not null,
+    empId int not null,
+    interaction varchar(100)
 );
+
+alter table employee add foreign key (sectNumber) references book (sectNumber);
+alter table "order" add foreign key (custSSN) references customer (SSN);
+alter table "order" add foreign key (bookID) references book (book_id);
+alter table book add foreign key (sectNumber) references section (NAME);
+alter table section add foreign key (empSSN) references employee (SSN);
+alter table recommendation add foreign key (orderID) references "order" (orderID);
 
 
 /* create table employee(firstname char(10), surname char(10), gender char(1), empId int, SSN int(9), Age int(2)); */
@@ -116,20 +122,20 @@ insert into employee values ('Barack', 'Barack', 'M', 9, 871028030, 28, 'Section
 insert into employee values ('Joe', 'Biden', 'M', 10, 146371980, 36, 'Section 2');
 insert into employee values ('Donald', 'Trump', 'M', 11, 458423171, 24, 'Section 10');
 
-insert into "order" values (13213, 608416078, 13322, 'Rental', 20, '2020-08-12');
-insert into "order" values (12302, 583103289, 43232, 'Purchase', 25, '2020-12-07');
-insert into "order" values (12300, 642638810, 43324, 'Purchase', 88, '2020-02-22');
-insert into "order" values (13011, 723712379, 55325, 'Rental', 12, '2020-04-19');
-insert into "order" values (12312, 828932950, 32223, 'Purchase', 11, '2020-05-15');
-insert into "order" values (12322, 123456789, 44334, 'Rental', 2, '2020-10-01');
-insert into "order" values (12389, 912093192, 55825, 'Rental', 12, '2020-05-02');
-insert into "order" values (12589, 475030039, 63452, 'Purchase', 4, '2020-01-22');
-insert into "order" values (14053, 658018083, 76543, 'Rental', 20, '2020-11-09');
-insert into "order" values (15012, 138123185, 65433, 'Purchase', 129, '2020-10-21');
-insert into "order" values (11023, 254389013, 65403, 'Purchase', 40, '2020-09-23');
-insert into "order" values (12430, 248030284, 60482, 'Rental', 20, '2020-01-12');
+insert into order values (13213, 608416078, 13322, 'Rental', 20, '2020-08-12');
+insert into order values (12302, 583103289, 43232, 'Purchase', 25, '2020-12-07');
+insert into order values (12300, 642638810, 43324, 'Purchase', 88, '2020-02-22');
+insert into order values (13011, 723712379, 55325, 'Rental', 12, '2020-04-19');
+insert into order values (12312, 828932950, 32223, 'Purchase', 11, '2020-05-15');
+insert into order values (12322, 123456789, 44334, 'Rental', 2, '2020-10-01');
+insert into order values (12389, 912093192, 55825, 'Rental', 12, '2020-05-02');
+insert into order values (12589, 475030039, 63452, 'Purchase', 4, '2020-01-22');
+insert into order values (14053, 658018083, 76543, 'Rental', 20, '2020-11-09');
+insert into order values (15012, 138123185, 65433, 'Purchase', 129, '2020-10-21');
+insert into order values (11023, 254389013, 65403, 'Purchase', 40, '2020-09-23');
+insert into order values (12430, 248030284, 60482, 'Rental', 20, '2020-01-12');
 
-select * from "order";
+select * from order;
 
 -- Adding some examples
 --optimise: section name -> integer (1,2,..), division: char: a,b,c... . easier instead of string to describe 'section x' as x is the variable
@@ -150,16 +156,16 @@ INSERT INTO book  values(60482, 'Luigi a.', 1989, 12.99, 'Mario and I, a long lo
 
 --Table for section:
 
-INSERT INTO "section" values('Section 1',512638792 ,1, 332, ARRAY['Fantasy']);
-INSERT INTO "section"  values('Section 2',754830123 ,2, 43, ARRAY['Comedy']);
-INSERT INTO "section"  values('Section 3',574130209 ,3, 643, ARRAY['Music']);
-INSERT INTO "section"  values('Section 4',654931001 ,4, 53, ARRAY['Films']);
-INSERT INTO "section"  values('Section 5',912380239 ,5, 5436, ARRAY['Science']);
-INSERT INTO "section"  values('Section 6',461398012 ,6, 643, ARRAY['History']);
-INSERT INTO "section"  values('Section 7',564731800, 7, 54, ARRAY['Tragedy']);
-INSERT INTO "section"  values('Section 8',123801238 ,8, 754, ARRAY['Action']);
-INSERT INTO "section"  values('Section 9',871028030, 9, 865, ARRAY['Thriller']);
-INSERT INTO "section"  values('Section 10',146371980,10, 76, ARRAY['Roman']);
+INSERT INTO section values('Section 1',512638792 ,1, 332, ARRAY['Fantasy']);
+INSERT INTO section  values('Section 2',754830123 ,2, 43, ARRAY['Comedy']);
+INSERT INTO section  values('Section 3',574130209 ,3, 643, ARRAY['Music']);
+INSERT INTO section  values('Section 4',654931001 ,4, 53, ARRAY['Films']);
+INSERT INTO section  values('Section 5',912380239 ,5, 5436, ARRAY['Science']);
+INSERT INTO section  values('Section 6',461398012 ,6, 643, ARRAY['History']);
+INSERT INTO section  values('Section 7',564731800, 7, 54, ARRAY['Tragedy']);
+INSERT INTO section  values('Section 8',123801238 ,8, 754, ARRAY['Action']);
+INSERT INTO section  values('Section 9',871028030, 9, 865, ARRAY['Thriller']);
+INSERT INTO section  values('Section 10',146371980,10, 76, ARRAY['Roman']);
 
 --Table for recommendation:
 
