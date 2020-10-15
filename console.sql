@@ -1,7 +1,7 @@
 /* Delete the tables if they already exist */
 drop table if exists customer;
 drop table if exists employee;
-drop table if exists "order";
+drop table if exists "order" cascade ;
 drop table if exists recommendation;
 drop table if exists "section";
 drop table if exists book;
@@ -9,23 +9,23 @@ drop table if exists book;
 
 /* Create the schema for our tables */
 create table customer(
-    firstname   char(15),
-    surname     char(20),
-    Gender      varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
-    SSN         integer not null check (SSN between 100000000 and 999999999) primary key,
-    age          integer not null check (age between 1 and 99)
+                         firstname   char(15),
+                         surname     char(20),
+                         Gender      varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
+                         SSN         integer not null check (SSN between 100000000 and 999999999) primary key,
+                         age         integer not null check (age between 1 and 99)
 );
 
 create table employee
 (
     firstname  char(15),
     surname    char(20),
-    Gender     varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
-    empID      integer    not null,
-    SSN        integer    not null check (SSN between 100000000 and 999999999) primary key,
-    age        integer    not null check (age between 1 and 99),
-    sectNumber varchar(255)    not null,
-    foreign key (sectNumber) references book (book_id)
+    Gender     varchar(1)   NOT NULL CHECK (Gender IN ('M', 'F')),
+    empID      integer      not null,
+    SSN        integer      not null check (SSN between 100000000 and 999999999) primary key,
+    age        integer      not null check (age between 1 and 99),
+    sectNumber varchar(255) not null,
+    foreign key (sectNumber) references book (sectNumber)
 );
 
 create table "order"
@@ -43,47 +43,47 @@ create table "order"
 CREATE TABLE book
 (
     book_id    INTEGER                                            NOT NULL,
-    author     CHARACTER varying(50) COLLATE pg_catalog."default" NOT NULL,
+    author     CHARACTER varying(255)                             NOT NULL,
     YEAR       INTEGER                                            NOT NULL,
     price      numeric(6, 2)                                      NOT NULL,
-    title      CHARACTER VARYING COLLATE pg_catalog."default"     NOT NULL,
-    editor     CHARACTER VARYING COLLATE pg_catalog."default"     NOT NULL,
+    title      CHARACTER VARYING(255)                             NOT NULL,
+    editor     CHARACTER VARYING(255)                             NOT NULL,
     CONSTRAINT "Book_pkey" PRIMARY KEY (book_id),
-    sectNumber varchar                                            not null,
-    foreign key (sectNumber) references section (NAME)
+    sectNumber varchar(255)                                       not null
+    --foreign key (sectNumber) references section (NAME)
 );
 
 
 CREATE TABLE section(
-    NAME CHARACTER VARYING COLLATE pg_catalog."default" NOT NULL,
-    empSSN int not null,
-     foreign key (empSSN) references employee (SSN),
-    number INTEGER NOT NULL,
-    number_books INTEGER NOT NULL,
-    genre CHARACTER VARYING[] COLLATE pg_catalog."default",
-    CONSTRAINT section_pkey PRIMARY KEY (NAME, "number")
+                        NAME CHARACTER VARYING (255) NOT NULL,
+                        empSSN int not null,
+                        foreign key (empSSN) references employee (SSN),
+                        number INTEGER NOT NULL,
+                        number_books INTEGER NOT NULL,
+                        genre CHARACTER VARYING[] COLLATE pg_catalog."default",
+                        CONSTRAINT section_pkey PRIMARY KEY (NAME, "number")
 );
 
 
 CREATE TABLE recommendation (
-    Title CHARACTER VARYING,
-    Genre CHARACTER VARYING,
-    Author CHARACTER VARYING,
-    How_it_relates CHARACTER VARYING,
-    orderID int not null,
-    foreign key (orderID) references "order" (orderID)
+                                Title CHARACTER VARYING(255),
+                                Genre CHARACTER VARYING(255),
+                                Author CHARACTER VARYING(255),
+                                How_it_relates CHARACTER VARYING(255),
+                                orderID int not null,
+                                foreign key (orderID) references "order" (orderID)
 );
 
 create table interacts (
-    custId int not null,
-    empId int not null,
-    interaction varchar(100)
+                           custId int not null,
+                           empId int not null,
+                           interaction varchar(100)
 );
 
 create table complains (
-    custId int not null,
-    empId int not null,
-    interaction varchar(100)
+                           custId int not null,
+                           empId int not null,
+                           interaction varchar(100)
 );
 
 
@@ -133,33 +133,33 @@ select * from "order";
 
 -- Adding some examples
 --optimise: section name -> integer (1,2,..), division: char: a,b,c... . easier instead of string to describe 'section x' as x is the variable
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(13322, 'J.K Rowlink', 1999, 12.99, 'The white spirit', 'Jean C.', 'Section 3');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(43232, 'J.K Rowlink', 2001, 11.99, 'The Black spirit', 'Jean C.','Section 1');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(43324, 'Rollingstone', 1990, 9.99, 'There was a day', 'Pierre Cassis','Section 4');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(55325, 'Davinci', 1879, 19.99, 'my first artt', 'Oldtimers.inc','Section 2');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(32223, 'Google', 2019, 2.99, 'There was a time', 'trouxdbal','Section 6');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(44334, 'Alex lecrivain', 2020, 102.99, 'Mon temps est venu', 'Martens inc.','Section 9');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(55825, 'Jeje on the top', 2019, 19.99, 'sql is iwipizi', 'UMdistr.','Section 5');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(63452, 'Luigi a.', 1989, 12.99, 'Mario and I, a long love story', 'Antolini inc','Section 7');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(76543, 'Yeyetima', 2007, 12.99, ' The absoluut crise', 'Jean Michel Dupre','Section 8');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(65433, 'VivaLalgerie', 1989, 0.99, 'lalgerie a bruxelles, une nouvelle destination ', 'Jean C.','Section 10');
+INSERT INTO book values(13322, 'J.K Rowlink', 1999, 12.99, 'The white spirit', 'Jean C.', 'Section 3');
+INSERT INTO book values(43232, 'J.K Rowlink', 2001, 11.99, 'The Black spirit', 'Jean C.','Section 1');
+INSERT INTO book values(43324, 'Rollingstone', 1990, 9.99, 'There was a day', 'Pierre Cassis','Section 4');
+INSERT INTO book values(55325, 'Davinci', 1879, 19.99, 'my first artt', 'Oldtimers.inc','Section 2');
+INSERT INTO book values(32223, 'Google', 2019, 2.99, 'There was a time', 'trouxdbal','Section 6');
+INSERT INTO book values(44334, 'Alex lecrivain', 2020, 102.99, 'Mon temps est venu', 'Martens inc.','Section 9');
+INSERT INTO book values(55825, 'Jeje on the top', 2019, 19.99, 'sql is iwipizi', 'UMdistr.','Section 5');
+INSERT INTO book values(63452, 'Luigi a.', 1989, 12.99, 'Mario and I, a long love story', 'Antolini inc','Section 7');
+INSERT INTO book values(76543, 'Yeyetima', 2007, 12.99, ' The absoluut crise', 'Jean Michel Dupre','Section 8');
+INSERT INTO book values(65433, 'VivaLalgerie', 1989, 0.99, 'lalgerie a bruxelles, une nouvelle destination ', 'Jean C.','Section 10');
 -- Having a book twice test:
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(65403, 'VivaLalgerie', 1989, 0.99, 'lalgerie a bruxelles, une nouvelle destination ', 'Jean C.','Section 10');
-INSERT INTO book (book_id, author, YEAR, price, title, editor) values(60482, 'Luigi a.', 1989, 12.99, 'Mario and I, a long love story', 'Antolini inc','Section 7');
+INSERT INTO book values(65403, 'VivaLalgerie', 1989, 0.99, 'lalgerie a bruxelles, une nouvelle destination ', 'Jean C.','Section 10');
+INSERT INTO book  values(60482, 'Luigi a.', 1989, 12.99, 'Mario and I, a long love story', 'Antolini inc','Section 7');
 
 
 --Table for section:
 
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 1',512638792 ,1, 332, ARRAY['Fantasy']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 2',754830123 ,2, 43, ARRAY['Comedy']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 3',574130209 ,3, 643, ARRAY['Music']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 4',654931001 ,4, 53, ARRAY['Films']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 5',912380239 ,5, 5436, ARRAY['Science']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 6',461398012 ,6, 643, ARRAY['History']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 7',564731800, 7, 54, ARRAY['Tragedy']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 8',123801238 ,8, 754, ARRAY['Action']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 9',871028030, 9, 865, ARRAY['Thriller']);
-INSERT INTO "section" (NAME, number, number_books, genre) values('Section 10',146371980,10, 76, ARRAY['Roman']);
+INSERT INTO "section" values('Section 1',512638792 ,1, 332, ARRAY['Fantasy']);
+INSERT INTO "section"  values('Section 2',754830123 ,2, 43, ARRAY['Comedy']);
+INSERT INTO "section"  values('Section 3',574130209 ,3, 643, ARRAY['Music']);
+INSERT INTO "section"  values('Section 4',654931001 ,4, 53, ARRAY['Films']);
+INSERT INTO "section"  values('Section 5',912380239 ,5, 5436, ARRAY['Science']);
+INSERT INTO "section"  values('Section 6',461398012 ,6, 643, ARRAY['History']);
+INSERT INTO "section"  values('Section 7',564731800, 7, 54, ARRAY['Tragedy']);
+INSERT INTO "section"  values('Section 8',123801238 ,8, 754, ARRAY['Action']);
+INSERT INTO "section"  values('Section 9',871028030, 9, 865, ARRAY['Thriller']);
+INSERT INTO "section"  values('Section 10',146371980,10, 76, ARRAY['Roman']);
 
 --Table for recommendation:
 
