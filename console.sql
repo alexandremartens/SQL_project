@@ -8,60 +8,83 @@ drop table if exists book;
 
 
 /* Create the schema for our tables */
-create table customer(firstname char(15), surname char(20),
-                      Gender varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
-                      SSN integer not null check (SSN between 100000000 and 999999999) primary key,
-                      age integer not null check (age between 1 and 99));
+create table customer(
+    firstname   char(15),
+    surname     char(20),
+    Gender      varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
+    SSN         integer not null check (SSN between 100000000 and 999999999) primary key,
+    age          integer not null check (age between 1 and 99)
+);
 
-create table employee(firstname char(15), surname char(20),
-                      Gender varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
-                      empID integer not null,
-                      SSN integer not null check (SSN between 100000000 and 999999999) primary key,
-                      age integer not null check (age between 1 and 99),
-                      sectNumber varchar not null foreign key);
+create table employee
+(
+    firstname  char(15),
+    surname    char(20),
+    Gender     varchar(1) NOT NULL CHECK (Gender IN ('M', 'F')),
+    empID      integer    not null,
+    SSN        integer    not null check (SSN between 100000000 and 999999999) primary key,
+    age        integer    not null check (age between 1 and 99),
+    sectNumber varchar(255)    not null,
+    foreign key (sectNumber) references book (book_id)
+);
 
-create table "order"(orderID integer not null primary key,
-                     custSSN integer not null foreign key,
-                     bookID integer not null foreign key,
-                     ordertype varchar(20) not null check(ordertype in ('Rental', 'Purchase')),
-                     price integer not null,
-                     date date);
+create table "order"
+(
+    orderID     integer not null primary key,
+    custSSN     integer not null,
+    foreign key (custSSN) references customer (SSN),
+    bookID      integer not null,
+    foreign key (bookID) references book (book_id),
+    ordertype   varchar(20) not null check(ordertype in ('Rental', 'Purchase')),
+    price       integer not null,
+    date date
+);
 
-CREATE TABLE book(
-                     book_id INTEGER NOT NULL,
-                     author CHARACTER varying(50) COLLATE pg_catalog."default" NOT NULL,
-                     YEAR INTEGER NOT NULL,
-                     price numeric(6,2) NOT NULL,
-                     title CHARACTER VARYING COLLATE pg_catalog."default" NOT NULL,
-                     editor CHARACTER VARYING COLLATE pg_catalog."default" NOT NULL,
-                     CONSTRAINT "Book_pkey" PRIMARY KEY (book_id),
-                     sectNumber varchar not null foreign key);
+CREATE TABLE book
+(
+    book_id    INTEGER                                            NOT NULL,
+    author     CHARACTER varying(50) COLLATE pg_catalog."default" NOT NULL,
+    YEAR       INTEGER                                            NOT NULL,
+    price      numeric(6, 2)                                      NOT NULL,
+    title      CHARACTER VARYING COLLATE pg_catalog."default"     NOT NULL,
+    editor     CHARACTER VARYING COLLATE pg_catalog."default"     NOT NULL,
+    CONSTRAINT "Book_pkey" PRIMARY KEY (book_id),
+    sectNumber varchar                                            not null,
+    foreign key (sectNumber) references section (NAME)
+);
 
 
-CREATE TABLE "section"(
-                          NAME CHARACTER VARYING COLLATE pg_catalog."default" NOT NULL,
-                          empSSN int not null foreign key,
-                          number INTEGER NOT NULL,
-                          number_books INTEGER NOT NULL,
-                          genre CHARACTER VARYING[] COLLATE pg_catalog."default",
-                          CONSTRAINT section_pkey PRIMARY KEY (NAME, "number"));
+CREATE TABLE section(
+    NAME CHARACTER VARYING COLLATE pg_catalog."default" NOT NULL,
+    empSSN int not null,
+     foreign key (empSSN) references employee (SSN),
+    number INTEGER NOT NULL,
+    number_books INTEGER NOT NULL,
+    genre CHARACTER VARYING[] COLLATE pg_catalog."default",
+    CONSTRAINT section_pkey PRIMARY KEY (NAME, "number")
+);
 
 
 CREATE TABLE recommendation (
-                                Title CHARACTER VARYING,
-                                Genre CHARACTER VARYING,
-                                Author CHARACTER VARYING,
-                                How_it_relates CHARACTER VARYING,
-                                orderID int not null foreign key)
-    );
+    Title CHARACTER VARYING,
+    Genre CHARACTER VARYING,
+    Author CHARACTER VARYING,
+    How_it_relates CHARACTER VARYING,
+    orderID int not null,
+    foreign key (orderID) references "order" (orderID)
+);
 
-create table interacts (custId int not null,
-                        empId int not null
-                            interaction varchar(100));
+create table interacts (
+    custId int not null,
+    empId int not null,
+    interaction varchar(100)
+);
 
-create table complains (custId int not null,
-                        empId int not null
-                            interaction varchar(100));
+create table complains (
+    custId int not null,
+    empId int not null,
+    interaction varchar(100)
+);
 
 
 /* create table employee(firstname char(10), surname char(10), gender char(1), empId int, SSN int(9), Age int(2)); */
@@ -150,4 +173,3 @@ INSERT INTO recommendation VALUES ('Blue Bloods', 'fantasy',  'Melissa de la Cru
 INSERT INTO recommendation VALUES ('The Colorado Kid', 'drama', 'Stephen King', 'same author',12589);
 INSERT INTO recommendation VALUES ('The Rising', 'fantasy', 'Ron Powers', 'same length',14053);
 INSERT INTO recommendation VALUES ('The Firm', 'fiction', ' John Grisham', 'same editor',15012);
-
