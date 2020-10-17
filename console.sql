@@ -107,7 +107,12 @@ insert into customer values ('Shelley', 'Bachman', 'F', 475030039, 29);
 insert into customer values ('Jac', 'Bachman', 'F', 912093192, 23);
 insert into customer values ('Stefan', 'Tovel', 'M', 138123185, 9);
 insert into customer values ('Aaron', 'Tovel', 'M', 254389013, 19);
-insert into customer values ('Lizzie', 'McArthy', 'F', 248030284, 45);
+insert into customer values ('Lizzie', 'McArthy', 'F', 248_030_284, 45);
+insert into customer values ('Evelin', 'Marcell', 'F', 219_676_356, 43);
+insert into customer values ('Lapo', 'Elkann', 'M', 044_446_124, 23);
+insert into customer values ('Clive', 'Ridge', 'M', 551_451_385, 39);
+insert into customer values ('Donald', 'Romey', 'M', 624_063_642, 55);
+insert into customer values ('Jade', 'Laurence', 'F', 351_015_365, 35);
 
 --Idea, empid other fixed length than ssn tot avoid confusion
 insert into employee values ('KSI', '', 'M', 1, 512638792, 45, 'Section 1');
@@ -121,6 +126,11 @@ insert into employee values ('Johnny', 'Sins', 'M', 8, 123801238, 49, 'Section 1
 insert into employee values ('Barack', 'Barack', 'M', 9, 871028030, 28, 'Section 3');
 insert into employee values ('Joe', 'Biden', 'M', 10, 146371980, 36, 'Section 2');
 insert into employee values ('Donald', 'Trump', 'M', 11, 458423171, 24, 'Section 10');
+insert into employee values ('Elon', 'Musk', 'M', 12, 609_127_896, 37, 'Section 7');
+insert into employee values ('Jeff', 'Bezos', 'M', 13, 423_785_787, 36, 'Section 5');
+insert into employee values ('Christine', 'Lagarde', 'F', 14, 437_910_261, 23, 'Section 2');
+insert into employee values ('Lana', 'Rhoades', 'F', 15, 262_094_875, 21, 'Section 1');
+
 
 insert into order values (13213, 608416078, 13322, 'Rental', 20, '2020-08-12');
 insert into order values (12302, 583103289, 43232, 'Purchase', 25, '2020-12-07');
@@ -133,7 +143,12 @@ insert into order values (12589, 475030039, 63452, 'Purchase', 4, '2020-01-22');
 insert into order values (14053, 658018083, 76543, 'Rental', 20, '2020-11-09');
 insert into order values (15012, 138123185, 65433, 'Purchase', 129, '2020-10-21');
 insert into order values (11023, 254389013, 65403, 'Purchase', 40, '2020-09-23');
-insert into order values (12430, 248030284, 60482, 'Rental', 20, '2020-01-12');
+insert into order values (17422, 247060284, 60792, 'Rental', 15, '2019-01-11');
+insert into order values (12556, 485031039, 73342, 'Rental', 5, '2019-02-27');
+insert into order values (16034, 758019083, 76773, 'Rental', 6, '2020-07-07');
+insert into order values (17088, 133423185, 65553, 'Purchase', 40, '2020-10-13');
+insert into order values (18020, 345389013, 25403, 'Purchase', 35, '2020-05-22');
+insert into order values (19403, 333030284, 10582, 'Purchase', 22, '2020-03-15');
 
 select * from order;
 
@@ -149,6 +164,11 @@ INSERT INTO book values(55825, 'Jeje on the top', 2019, 19.99, 'sql is iwipizi',
 INSERT INTO book values(63452, 'Luigi a.', 1989, 12.99, 'Mario and I, a long love story', 'Antolini inc','Section 7');
 INSERT INTO book values(76543, 'Yeyetima', 2007, 12.99, ' The absoluut crise', 'Jean Michel Dupre','Section 8');
 INSERT INTO book values(65433, 'VivaLalgerie', 1989, 0.99, 'lalgerie a bruxelles, une nouvelle destination ', 'Jean C.','Section 10');
+INSERT INTO book values(36443, 'Dan Brown', 1995, 15.99, ' The da Vinci Code', 'Transworld','Section 8');
+INSERT INTO book values(25553, 'Grisham John,', 2008, 20.99, 'The Help', 'Random House','Section 3');
+INSERT INTO book values(15343, 'Victoria Golden', 2002, 5.99, 'About a boy ', 'Bloomsbury','Section 8' ||
+ '');
+
 -- Having a book twice test:
 INSERT INTO book values(65403, 'VivaLalgerie', 1989, 0.99, 'lalgerie a bruxelles, une nouvelle destination ', 'Jean C.','Section 10');
 INSERT INTO book  values(60482, 'Luigi a.', 1989, 12.99, 'Mario and I, a long love story', 'Antolini inc','Section 7');
@@ -166,6 +186,10 @@ INSERT INTO section  values('Section 7',564731800, 7, 54, ARRAY['Tragedy']);
 INSERT INTO section  values('Section 8',123801238 ,8, 754, ARRAY['Action']);
 INSERT INTO section  values('Section 9',871028030, 9, 865, ARRAY['Thriller']);
 INSERT INTO section  values('Section 10',146371980,10, 76, ARRAY['Roman']);
+INSERT INTO section  values('Section 11',372_279_130, 11, 345, ARRAY['Travel']);
+
+
+
 
 --Table for recommendation:
 
@@ -179,3 +203,4 @@ INSERT INTO recommendation VALUES ('Blue Bloods', 'fantasy',  'Melissa de la Cru
 INSERT INTO recommendation VALUES ('The Colorado Kid', 'drama', 'Stephen King', 'same author',12589);
 INSERT INTO recommendation VALUES ('The Rising', 'fantasy', 'Ron Powers', 'same length',14053);
 INSERT INTO recommendation VALUES ('The Firm', 'fiction', ' John Grisham', 'same editor',15012);
+INSERT INTO recommendation VALUES ('The Broker', 'travel', ' Gillian McKeith', 'same genre',13511);
