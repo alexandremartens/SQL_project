@@ -142,13 +142,13 @@ insert into order values (12389, 912093192, 55825, 'Rental', 12, '2020-05-02');
 insert into order values (12589, 475030039, 63452, 'Purchase', 4, '2020-01-22');
 insert into order values (14053, 658018083, 76543, 'Rental', 20, '2020-11-09');
 insert into order values (15012, 138123185, 65433, 'Purchase', 129, '2020-10-21');
-insert into order values (11023, 254389013, 65403, 'Purchase', 40, '2020-09-23');
-insert into order values (17422, 247060284, 60792, 'Rental', 15, '2019-01-11');
-insert into order values (12556, 485031039, 73342, 'Rental', 5, '2019-02-27');
-insert into order values (16034, 758019083, 76773, 'Rental', 6, '2020-07-07');
-insert into order values (17088, 133423185, 65553, 'Purchase', 40, '2020-10-13');
-insert into order values (18020, 345389013, 25403, 'Purchase', 35, '2020-05-22');
-insert into order values (19403, 333030284, 10582, 'Purchase', 22, '2020-03-15');
+insert into order values (11023, 254389013, 36443, 'Purchase', 40, '2020-09-23');
+insert into order values (17422, 247060284, 28553, 'Rental', 15, '2019-01-11');
+insert into order values (12556, 485031039, 28553, 'Rental', 5, '2019-02-27');
+insert into order values (16034, 758019083, 76543, 'Rental', 6, '2020-07-07');
+insert into order values (17088, 133423185, 15343, 'Purchase', 40, '2020-10-13');
+insert into order values (18020, 345389013, 36443, 'Purchase', 35, '2020-05-22');
+insert into order values (19403, 333030284, 36443, 'Purchase', 22, '2020-03-15');
 
 select * from order;
 
@@ -165,7 +165,7 @@ INSERT INTO book values(63452, 'Luigi a.', 1989, 12.99, 'Mario and I, a long lov
 INSERT INTO book values(76543, 'Yeyetima', 2007, 12.99, ' The absoluut crise', 'Jean Michel Dupre','Section 8');
 INSERT INTO book values(65433, 'VivaLalgerie', 1989, 0.99, 'lalgerie a bruxelles, une nouvelle destination ', 'Jean C.','Section 10');
 INSERT INTO book values(36443, 'Dan Brown', 1995, 15.99, ' The da Vinci Code', 'Transworld','Section 8');
-INSERT INTO book values(25553, 'Grisham John,', 2008, 20.99, 'The Help', 'Random House','Section 3');
+INSERT INTO book values(28553, 'Grisham John,', 2008, 20.99, 'The Help', 'Random House','Section 3');
 INSERT INTO book values(15343, 'Victoria Golden', 2002, 5.99, 'About a boy ', 'Bloomsbury','Section 8' ||
  '');
 
@@ -186,7 +186,9 @@ INSERT INTO section  values('Section 7',564731800, 7, 54, ARRAY['Tragedy']);
 INSERT INTO section  values('Section 8',123801238 ,8, 754, ARRAY['Action']);
 INSERT INTO section  values('Section 9',871028030, 9, 865, ARRAY['Thriller']);
 INSERT INTO section  values('Section 10',146371980,10, 76, ARRAY['Roman']);
-INSERT INTO section  values('Section 11',372_279_130, 11, 345, ARRAY['Travel']);
+INSERT INTO section  values('Section 11',262_094_875, 11, 345, ARRAY['Travel']);
+INSERT INTO section  values('Section 12',423_785_787, 12, 50, ARRAY['Biography']);
+
 
 
 
@@ -203,4 +205,8 @@ INSERT INTO recommendation VALUES ('Blue Bloods', 'fantasy',  'Melissa de la Cru
 INSERT INTO recommendation VALUES ('The Colorado Kid', 'drama', 'Stephen King', 'same author',12589);
 INSERT INTO recommendation VALUES ('The Rising', 'fantasy', 'Ron Powers', 'same length',14053);
 INSERT INTO recommendation VALUES ('The Firm', 'fiction', ' John Grisham', 'same editor',15012);
-INSERT INTO recommendation VALUES ('The Broker', 'travel', ' Gillian McKeith', 'same genre',13511);
+INSERT INTO recommendation VALUES ('The Broker', 'travel', ' Gillian McKeith', 'same genre',11023);
+INSERT INTO recommendation VALUES ('Mill Town', 'biography', 'Kerri Arsenault', 'same genre',17422);
+INSERT INTO recommendation VALUES ('Clutter', 'fiction', ' Jennifer Howard', 'same editor',12556);
+INSERT INTO recommendation VALUES ('Carry', 'travel', ' Fer Jensen', 'same genre',16034);
+
